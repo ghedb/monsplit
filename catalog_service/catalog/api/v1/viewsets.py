@@ -27,12 +27,8 @@ class CatalogUpdateViewSet(APIView):
         serializer = CatalogUpdateSerializer(data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         data = serializer.data
-        import pprint
-        pprint.pprint(data)
         start_date = data.get('availability_date')
         end_date = data.get('availability_end_date')
-        pprint.pprint(start_date)
-        pprint.pprint(end_date)
         cat_obj = service.update_catalog_entry(
             cat_obj,
             start_date=start_date,
@@ -40,15 +36,3 @@ class CatalogUpdateViewSet(APIView):
         )
         serializer = CatalogSerializer(instance=cat_obj)
         return Response(serializer.data)
-
-
-
-
-'''
-
-{
-"availability_date": "2019-04-05", 
-"availability_end_date": null
-}
-
-'''

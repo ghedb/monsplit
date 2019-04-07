@@ -31,10 +31,7 @@ class EventProcessingFailure(Exception):
 def create_consumer(topic_name):
     """
     Connect to the Kafka endpoint and start consuming
-    messages from the given `topic`.
-
-    The given callback is applied on each
-    message.
+    messages from the given topic.
     """
     hosts = KAFKA_HOSTS
     zookeeper_host = ZOOKEEPER_HOSTS

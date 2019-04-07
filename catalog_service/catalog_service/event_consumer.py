@@ -7,7 +7,7 @@ from pprint import pprint
 
 import django
 
-from catalog.const import ProductEventTypes
+from catalog.const import ProductEventTypes, CONSUMER_GROUP
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "catalog_service.settings")
 django.setup()
@@ -31,19 +31,13 @@ class EventProcessingFailure(Exception):
 
 
 def create_consumer(topic_name):
-    """
-    Connect to the Kafka endpoint and start consuming
-    messages from the given `topic`.
 
-    The given callback is applied on each
-    message.
-    """
     hosts = KAFKA_HOSTS
     zookeeper_host = ZOOKEEPER_HOSTS
     kafka_client = KafkaClient(hosts=hosts)
     topic = kafka_client.topics[topic_name]
     consumer = topic.get_balanced_consumer(
-        consumer_group='roadmap',
+        consumer_group=CONSUMER_GROUP,
         auto_commit_enable=False,
         zookeeper_hosts=zookeeper_host
     )
@@ -66,7 +60,6 @@ def event_handler(message):
             ProductEventTypes.UPDATED,
 
         ]
-
         if event_type in product_updates:
             update_product(message)
 

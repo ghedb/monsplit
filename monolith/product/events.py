@@ -32,7 +32,6 @@ def __create_event(product_obj, event_type):
     )
     event_object.save()
     # Publish event on db commit
-    print('on commit')
     transaction.on_commit(
         lambda: submit_event.delay(event_object.id)
     )

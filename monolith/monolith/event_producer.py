@@ -13,7 +13,7 @@ ZOOKEEPER_HOSTS = 'localhost:2181'
 
 
 
-def start_events_sender(topic):
+def start_events_producer(topic):
     """
     Start an event producer in the background.
     """
@@ -27,14 +27,13 @@ def start_events_sender(topic):
 
 def send_event(topic, event):
     """
-    Push event to the given topic. If no
-    producer exists for this topic, a :exc:`RuntimeError`
-    is raised.
+    Push event to the given topic.
+    Create producer for topic if one does not already exist
     """
     assert isinstance(event, dict)
 
     if topic not in producers:
-        start_events_sender(topic=topic)
+        start_events_producer(topic=topic)
     event = json.dumps(event).encode('utf-8')
 
     producer = producers[topic]

@@ -11,7 +11,6 @@ logger = get_task_logger(__name__)
 
 @shared_task
 def submit_event(event_id):
-    print('task')
     event = Event.objects.get(id=event_id)
     with atomic():
         send_event(PRODUCT_TOPIC, event.body)

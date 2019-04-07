@@ -7,7 +7,6 @@ from django_extensions.db.fields.json import JSONField
 
 
 class Event(models.Model):
-    """Event table that stores all model changes"""
     id = models.UUIDField(
         primary_key=True,
         default=uuid.uuid4,
@@ -51,7 +50,6 @@ class Market(models.Model):
 
     def __str__(self):
         return self.name
-
 
     class Meta:
         ordering = (

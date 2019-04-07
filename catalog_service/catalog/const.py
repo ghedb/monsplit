@@ -10,3 +10,4 @@ class ProductEventTypes(str):
 
 
 CATALOG_TOPIC = 'catalog'
+CONSUMER_GROUP = 'roadmap'

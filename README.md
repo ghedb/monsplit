@@ -11,9 +11,9 @@ The main idea is that instead of having inter dependencies between apps and data
 Each service can own their own local model allowing for loose coupling.
 
 Each model should have a "master" service. In this case the monolith still "owns" Product.
-The catalog microservice takes ownership of catalog.
+The catalog microservice takes ownership of catalog. Each service is unaware of the other.
 
-Each service publishes events for changes to its public models.
+Each service publishes events to kafka for changes to its public models.
 Each service acts on external events based on its own business logic.
 
 Separation of django functionality has also been started, this allows for decoupling logic from django more cleanly.
@@ -22,8 +22,36 @@ It will probably make sense to look at alternative API frameworks going forward.
 
 
 
+### Data consistency
+
+Event object are created alongside anytime a database object is created/updated.
+When working with db transactions it is unsafe to send the event immediately, we must wait for a successful commit.
+Otherwise we risk sending an event for a db entry that never got committed.
+The event is created with a 'sent' boolean that indicates if it has been processed.
+
+A celery task is ran after commit that will pusblish the event.
+If the publish fails, the sent boolean remains false. 
+A periodic task can come back and 
+reprocess any events that are still unsent. 
+This allows for a fairly atomic databse/kafka operations
+
+
+
+
+####notes
 
 
 To run a local rabbitmq for celery
 
-docker run  --hostname my-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management 
+docker run  --hostname my-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management
+
+
+TODO:
+* Create docker compose file
+* sample data to import
+  * Create sample data
+  * Import on startup
+* Find usable kafka docker image
+
+
+ 
