@@ -1,0 +1,6 @@
+PRODUCT_TOPIC = 'product'
+
+class ProductEventTypes(str):
+    CREATED = 'PRODUCT_CREATED'
+    UPDATED = 'PRODUCT_UPDATED'
+    DISCONTINUED = 'PRODUCT_DISCONTINUED'

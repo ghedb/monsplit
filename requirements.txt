@@ -1,0 +1,6 @@
+django_rest_framework
+django
+celery
+django-extensions
+python-dateutil
+pykafka
