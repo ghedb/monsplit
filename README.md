@@ -33,7 +33,7 @@ A celery task is ran after commit that will pusblish the event.
 If the publish fails, the sent boolean remains false. 
 A periodic task can come back and 
 reprocess any events that are still unsent. 
-This allows for a fairly atomic databse/kafka operations
+This allows for fairly high consistency distributed transactions.
 
 
 
