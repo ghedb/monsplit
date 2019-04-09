@@ -14,7 +14,7 @@ from catalog.models import (
 @atomic()
 def create_catalog_entry(product_uuid, market_iso_code, start_date, end_date):
     product_obj = get_product_by_uuid(product_uuid)
-    market_obj = get_market(market_iso_code)
+    market_obj = get_market_by_iso(market_iso_code)
 
 
     cat_obj = CatalogEntry.objects.create(

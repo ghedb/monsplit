@@ -8,12 +8,13 @@ if [ "$1" = 'gunicorn' ]; then
     python manage.py migrate
     # Create admin user since we dont have any other access to the db atm
     python catalog_service/init_admin.py
+    python manage.py runserver 0.0.0.0:8000 # TODO using dev server to serve static for now
     # Start Gunicorn processes
-    echo Starting Gunicorn.
-    exec gunicorn catalog_service.wsgi:application \
-        --bind 0.0.0.0:8000 \
-        --workers 2 \
-        --log-level debug
+    # echo Starting Gunicorn.
+    # exec gunicorn catalog_service.wsgi:application \
+    #    --bind 0.0.0.0:8000 \
+    #    --workers 2 \
+    #    --log-level debug
 
 elif [ "$1" = 'celery' ]; then
     sleep 20 # currently rabbitmq is taking a while to start

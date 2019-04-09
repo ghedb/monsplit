@@ -51,14 +51,13 @@ class Market(models.Model):
     def __str__(self):
         return self.name
 
-
     class Meta:
         ordering = (
             'name',
         )
 
 
-class ProductuerySet(models.QuerySet):
+class ProductQuerySet(models.QuerySet):
     def all(self):
         return self.filter(discontinued=False)
 
@@ -86,7 +85,7 @@ class Product(models.Model):
         verbose_name='Updated At',
         null=True,
     )
-    objects = ProductuerySet.as_manager()
+    objects = ProductQuerySet.as_manager()
 
     def __str__(self):
         return '{0} - {1}'.format(self.name, self.product_uuid)
@@ -139,3 +138,5 @@ class CatalogEntry(models.Model):
             self.availability_date
         )
 
+    class Meta:
+        unique_together = ('market', 'product')

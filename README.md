@@ -1,6 +1,6 @@
 
 
-# Splitting the django monolith
+# Splitting a django monolith
 
 This is a demo of how I approached splitting a monolithic django system into microservices.
 Its is a very dumbed down version to demo some of the concepts.
@@ -41,6 +41,8 @@ This allows for fairly high consistency distributed transactions.
 ### Trying it out
 
 `docker-compose up`
+
+Note that no volumes are mounted so data is not persistent
 
 docker entrypoint will automatically create an admin user: admin/pass
 
