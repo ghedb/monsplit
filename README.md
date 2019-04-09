@@ -38,7 +38,7 @@ This allows for fairly high consistency distributed transactions.
 
 
 
-##Trying it out
+### Trying it out
 
 `docker-compose up`
 
@@ -65,7 +65,7 @@ The event will get created, sent and consumed by the catalog service making it a
 
 
 
-###TODO:
+### TODO:
 
 
 * tests
