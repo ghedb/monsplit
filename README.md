@@ -22,7 +22,7 @@ It will probably make sense to look at alternative API frameworks going forward.
 
 
 
-### Data consistency
+## Data consistency
 
 Event object are created alongside anytime a database object is created/updated.
 When working with db transactions it is unsafe to send the event immediately, we must wait for a successful commit.
@@ -38,7 +38,7 @@ This allows for fairly high consistency distributed transactions.
 
 
 
-###Trying it out
+##Trying it out
 
 `docker-compose up`
 
