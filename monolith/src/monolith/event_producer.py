@@ -1,16 +1,10 @@
 # -*- coding: utf-8 -*-
 import json
+from django.conf import settings
 
 from pykafka import KafkaClient
 
-consumer_running = None
-kafka_client = None
 producers = {}
-
-
-KAFKA_HOSTS = 'localhost:9092'
-ZOOKEEPER_HOSTS = 'localhost:2181'
-
 
 
 def start_events_producer(topic):
@@ -19,8 +13,7 @@ def start_events_producer(topic):
     """
 
     topic_name = topic
-    hosts = KAFKA_HOSTS
-    kafka_client = KafkaClient(hosts=hosts)
+    kafka_client = KafkaClient(hosts=settings.KAFKA_HOSTS)
     topic = kafka_client.topics[topic]
     producers[topic_name] = topic.get_producer()
 
@@ -37,4 +30,4 @@ def send_event(topic, event):
     event = json.dumps(event).encode('utf-8')
 
     producer = producers[topic]
-    producer.produce(event,)
+    producer.produce(event)

@@ -1,0 +1,125 @@
+version: '3'
+services:
+  ### Monolith services
+  monolith-db:
+    image: postgres
+
+  monolith:
+    build: ./monolith/
+    environment:
+        - MQ_HOST=monolith-mq
+        - KAFKA=kafka1
+        - ZOOKEEPER=zoo1
+        - DB=monolith-db
+    command: gunicorn
+    ports:
+     - "8000:8000"
+    depends_on:
+      - monolith-db
+      - kafka1
+  monolith-mq:
+    image: rabbitmq:3-management
+    
+  monolith_worker:
+    build: ./monolith/
+    environment:
+      - MQ_HOST=monolith-mq
+      - KAFKA=kafka1
+      - ZOOKEEPER=zoo1
+      - DB=monolith-db
+    command: celery
+    depends_on:
+      - monolith-db
+      - kafka1
+      - monolith-mq
+    links:
+      - kafka1
+      - zoo1
+
+  monolith_consumer:
+    build: ./monolith/
+    environment:
+      - MQ_HOST=monolith-mq
+      - KAFKA=kafka1
+      - ZOOKEEPER=zoo1
+      - DB=monolith-db
+    command: consumer
+    depends_on:
+      - monolith-db
+      - kafka1
+      - monolith-mq
+    links:
+      - kafka1
+      - zoo1
+
+#### Microservice services
+  catalog-db:
+    image: postgres
+  catalog:
+    build: ./catalog_service/
+    environment:
+      - MQ_HOST=catalog-mq
+      - KAFKA=kafka1
+      - ZOOKEEPER=zoo1
+      - DB=catalog-db
+    command: gunicorn
+    ports:
+      - "8001:8000"
+    depends_on:
+      - catalog-db
+      - kafka1
+  catalog-mq:
+    image: rabbitmq:3-management
+    
+  catalog_worker:
+    build: ./catalog_service/
+    environment:
+      - MQ_HOST=catalog-mq
+      - KAFKA=kafka1
+      - ZOOKEEPER=zoo1
+      - DB=catalog-db
+    command: celery
+    depends_on:
+      - catalog-db
+      - kafka1
+      - catalog-mq
+    links:
+      - kafka1
+      - zoo1
+
+  catalog_consumer:
+    build: ./catalog_service/
+    environment:
+      - MQ_HOST=catalog-mq
+      - KAFKA=kafka1
+      - ZOOKEEPER=zoo1
+      - DB=catalog-db
+    command: consumer
+    depends_on:
+      - catalog-db
+      - kafka1
+      - catalog-mq
+    links:
+      - kafka1
+      - zoo1
+
+## Kafka shared
+
+  zoo1:
+    hostname: zoo1
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+  kafka1:
+    hostname: kafka1
+    image: wurstmeister/kafka
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka1
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: zoo1:2181
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zoo1
+
+

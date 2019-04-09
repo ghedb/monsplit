@@ -9,7 +9,7 @@ import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "monolith.settings")
 django.setup()
 
-from catalog.const import CatalogEventTypes, CATALOG_TOPIC
+from catalog.const import CatalogEventTypes, CATALOG_TOPIC, CONSUMER_GROUP
 from catalog.models import CatalogEntry, Market
 from product.models import Product
 from dateutil.parser import parse
@@ -18,10 +18,9 @@ from pykafka import KafkaClient
 from pykafka.exceptions import NoBrokersAvailableError, SocketDisconnectedError
 
 
-KAFKA_HOSTS = 'localhost:9092'
-ZOOKEEPER_HOSTS = 'localhost:2181'
+from django.conf import settings
 
-CONSUMER_GROUP = 'monolith'
+
 
 
 class EventProcessingFailure(Exception):
@@ -29,18 +28,13 @@ class EventProcessingFailure(Exception):
 
 
 def create_consumer(topic_name):
-    """
-    Connect to the Kafka endpoint and start consuming
-    messages from the given topic.
-    """
-    hosts = KAFKA_HOSTS
-    zookeeper_host = ZOOKEEPER_HOSTS
-    kafka_client = KafkaClient(hosts=hosts)
+
+    kafka_client = KafkaClient(hosts=settings.KAFKA_HOSTS)
     topic = kafka_client.topics[topic_name]
     consumer = topic.get_balanced_consumer(
         consumer_group=CONSUMER_GROUP,
         auto_commit_enable=False,
-        zookeeper_hosts=zookeeper_host
+        zookeeper_hosts=settings.ZOOKEEPER_HOSTS
     )
     return consumer
 

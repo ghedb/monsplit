@@ -3,3 +3,4 @@ class CatalogEventTypes(str):
     UPDATED = 'CATALOG_ENTRY_UPDATED'
 
 CATALOG_TOPIC = 'catalog'
+CONSUMER_GROUP = 'monolith'

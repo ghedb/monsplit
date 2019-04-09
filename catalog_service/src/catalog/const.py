@@ -9,5 +9,6 @@ class ProductEventTypes(str):
     DISCONTINUED = 'PRODUCT_DISCONTINUED'
 
 
+PRODUCT_TOPIC = 'product'
 CATALOG_TOPIC = 'catalog'
-CONSUMER_GROUP = 'roadmap'
+CONSUMER_GROUP = 'catalog'

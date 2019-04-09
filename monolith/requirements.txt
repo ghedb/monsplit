@@ -1,0 +1,8 @@
+django
+django_rest_framework
+django-extensions
+celery
+gunicorn
+psycopg2
+python-dateutil
+pykafka

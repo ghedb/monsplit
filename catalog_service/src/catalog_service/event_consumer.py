@@ -6,11 +6,10 @@ import time
 from pprint import pprint
 
 import django
-
-from catalog.const import ProductEventTypes, CONSUMER_GROUP
-
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "catalog_service.settings")
 django.setup()
+
+from catalog.const import ProductEventTypes, CONSUMER_GROUP, PRODUCT_TOPIC
 
 from dateutil.parser import parse
 from catalog.models import Product
@@ -19,27 +18,20 @@ from pykafka import KafkaClient
 from pykafka.exceptions import NoBrokersAvailableError, SocketDisconnectedError
 
 
-KAFKA_HOSTS = 'localhost:9092'
-ZOOKEEPER_HOSTS = 'localhost:2181'
+from django.conf import settings
 
-
-PRODUCT_TOPIC = 'product'
-CATALOG_TOPIC = 'catalog'
 
 class EventProcessingFailure(Exception):
     pass
 
 
 def create_consumer(topic_name):
-
-    hosts = KAFKA_HOSTS
-    zookeeper_host = ZOOKEEPER_HOSTS
-    kafka_client = KafkaClient(hosts=hosts)
+    kafka_client = KafkaClient(hosts=settings.KAFKA_HOSTS)
     topic = kafka_client.topics[topic_name]
     consumer = topic.get_balanced_consumer(
         consumer_group=CONSUMER_GROUP,
         auto_commit_enable=False,
-        zookeeper_hosts=zookeeper_host
+        zookeeper_hosts=settings.ZOOKEEPER_HOSTS
     )
     return consumer
 
@@ -176,7 +168,7 @@ if __name__ == "__main__":
     handler.setFormatter(formatter)
     root.addHandler(handler)
     try:
-        topics = [PRODUCT_TOPIC, CATALOG_TOPIC]
+        topics = [PRODUCT_TOPIC]
         start_consume(topics)
     except Exception as err:
         # delay to prevent container

@@ -38,20 +38,42 @@ This allows for fairly high consistency distributed transactions.
 
 
 
-####notes
+###Trying it out
+
+`docker-compose up`
+
+docker entrypoint will automatically create an admin user: admin/pass
+
+monolith urls:
+
+http://localhost:8000/admin
+
+http://localhost:8000/api/v1/catalog
+
+http://localhost:8000/api/v1/product
+
+catalog service urls:
+
+http://localhost:8001/catalog/admin
+
+http://localhost:8001/catalog/api/v1
 
 
-To run a local rabbitmq for celery
+An example of functionality is to create a product in the monolith system (admin)
+The event will get created, sent and consumed by the catalog service making it available there within seconds.
 
-docker run  --hostname my-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management
 
 
-TODO:
-* Create docker compose file
+
+###TODO:
+
+
+* tests
 * sample data to import
   * Create sample data
   * Import on startup
-* Find usable kafka docker image
+* gateway/nginx
+    * static files
 
 
  
