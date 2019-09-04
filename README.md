@@ -35,7 +35,10 @@ A periodic task can come back and
 reprocess any events that are still unsent. 
 This allows for fairly high consistency distributed transactions.
 
+## Domain Driven Design
 
+Even though the new "microservice" is also in django, it has been built in a way that reduces the "lock in" with django.
+As opposed to follow the standard way Django and Django Rest Framework suggests structuring the code. There is a clear separation between serializers (input/output), business logic (implemented as services), and storage (django models). Not only does it allow for really scalable maintainable code (from my experience), it also allows for parts to be replaces without needing to really rewrite the business logic. serializers/api and models can be switched out for something like Flask, and the business logic (services) will still be valid. Of course this is a so far a quick example, so the separation might not be 100%, but it is just to show the concept.
 
 
 ### Trying it out
